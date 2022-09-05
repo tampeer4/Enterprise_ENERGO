@@ -12,7 +12,7 @@ now = datetime.datetime.now()
 
 class Topic(models.Model):
     title = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(unique=True,blank=True,null=True,)
     description = models.TextField()
     def __str__(self):
         return self.title
@@ -27,24 +27,28 @@ class Part(models.Model):
         ('г', 'Грамм'),
     )
     pub_date = models.DateTimeField(auto_now = True)
-    prod_name = models.CharField(max_length=200)
-    full_prod_name = models.CharField(max_length=200)
+    prod_name = models.CharField(max_length=200,verbose_name=('Наименование'))
+    full_prod_name = models.CharField(max_length=200, verbose_name=('Полное наименование'))
     topic_work = models.ForeignKey(
         Topic,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        verbose_name=('Тема проекта')
     )
-    count = models.CharField(max_length=10, default=1)
+    count = models.CharField(max_length=10, default=1, verbose_name=('Количество'))
     unit_storage = models.CharField(
         max_length=9,
         choices=THEME_CHOICES,
-        default="кг")
-    cell_store = models.CharField(max_length=100)
+        default="кг",
+        verbose_name=('Эквивалент')
+        )
+    cell_store = models.CharField(max_length=100, verbose_name=('Место нахождения'))
     man = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='name'
+        related_name='name',
+        verbose_name=('Имя пользователя')
     )
-    email = models.EmailField(blank=True,null=True)
+    email = models.EmailField(blank=True,null=True,)
     def __str__(self):
         return self.prod_name
     class Meta:
@@ -102,4 +106,4 @@ class Request_Part(models.Model):
     class Meta:
         verbose_name = 'Заявка на товар'
         verbose_name_plural = 'Заявка на товары'
-    
+
