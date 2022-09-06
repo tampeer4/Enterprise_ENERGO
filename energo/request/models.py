@@ -1,4 +1,5 @@
 import email
+from pyexpat import model
 import pytz  
 import datetime
 from turtle import title
@@ -41,7 +42,11 @@ class Part(models.Model):
         default="кг",
         verbose_name=('Эквивалент')
         )
-    cell_store = models.CharField(max_length=100, verbose_name=('Место нахождения'))
+    cell_store = models.CharField(
+        max_length=100,
+        blank=True,null=True,
+        verbose_name=('Место нахождения'),
+    )
     man = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -65,6 +70,7 @@ class Request(models.Model):
     )
     pub_date = models.DateTimeField(auto_now = True)
     fio = models.CharField(max_length=100, verbose_name=('ФИО'))
+    email = models.EmailField(blank=True,null=True,)
     class Meta:
         verbose_name = 'Заказ'
         verbose_name_plural = 'Заказы'
@@ -80,11 +86,19 @@ class Request_Part(models.Model):
         ('шт', 'Штука'),
         ('г', 'Грамм'),
     )
-    request = models.ForeignKey(Request, on_delete=models.CASCADE)
+    request = models.ForeignKey(Request, on_delete=models.CASCADE,)
     part = models.ForeignKey(
         Part, 
         on_delete=models.CASCADE,
-        verbose_name=('Карточка товара'),)
+        verbose_name=('Карточка товара'),
+        blank=True,null=True,
+        )
+    user_input = models.CharField(
+        max_length=500,
+        verbose_name=('Пользовательский ввод'),
+        default='',
+        blank=True,null=True,
+        )
     count = models.IntegerField(default=1, verbose_name=('Количество'))
     unit_storage = models.CharField(
         max_length=9,
@@ -107,3 +121,35 @@ class Request_Part(models.Model):
         verbose_name = 'Заявка на товар'
         verbose_name_plural = 'Заявка на товары'
 
+# class User_Part(models.Model):
+#     THEME_CHOICES = (
+#         ('кг', 'Киллограмм'),
+#         ('шт', 'Штука'),
+#         ('г', 'Грамм'),
+#     )
+#     request = models.ForeignKey(Request, on_delete=models.CASCADE)
+#     part = models.ForeignKey(
+#         Part, 
+#         on_delete=models.CASCADE,
+#         verbose_name=('Карточка товара'),)
+#     fio = models.CharField(max_length=100, verbose_name=('ФИО'))
+#     prod_name = models.CharField(max_length=200,verbose_name=('Наименование'))
+#     count = models.CharField(max_length=10, default=1, verbose_name=('Количество'))
+#     unit_storage = models.CharField(
+#         max_length=9,
+#         choices=THEME_CHOICES,
+#         default="кг",
+#         verbose_name=('Эквивалент')
+#         )
+#     link = models.CharField(
+#         max_length=40,
+#         choices=THEME_CHOICES,
+#         default="Ссылка",
+#         verbose_name=('Ссылка'),
+#         blank=True,null=True,
+#         )
+#     link_url = models.CharField(
+#         max_length=500,
+#         verbose_name=('pass'),
+#         default='',
+#         blank=True,null=True,)

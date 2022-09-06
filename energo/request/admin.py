@@ -10,6 +10,7 @@ class PartAdmin(admin.ModelAdmin):
     # list_editable = ('topic_work',)
     search_fields = ('prod_name',)
     list_filter = ('pub_date', )
+    autocomplete_fields = ('topic_work', )
     # ordering = ['pub_date', ]
     empty_value_display = '-пусто-'
 admin.site.register(Part, PartAdmin)
